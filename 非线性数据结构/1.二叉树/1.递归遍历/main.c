@@ -11,7 +11,7 @@ typedef struct BiTNode
 } BiTNode, *BiTree;                  //BiTee = BiTNode *
 //初始化树的函数
 void CreateBiTree(BiTree *T)
-{ 
+{
     //BiTNode ** T
     *T = (BiTNode *)malloc(sizeof(BiTNode));
     (*T)->data = 1;
@@ -47,14 +47,53 @@ void PreOrderTraverse(BiTree T)
         return;
     }
     //调用自己
-    printf("data = %d\n", T->data);  //调用操作结点数据的函数方法
+    printf("%d ", T->data);       //调用操作结点数据的函数方法
     PreOrderTraverse(T->lchild); //访问该结点的左子树
     PreOrderTraverse(T->rchild); //访问该结点的右子树
 }
+
+// 中序遍历
+void inOrderTraverse(BiTree T)
+{
+    //终止条件
+    if (T == NULL)
+    {
+        return;
+    }
+    //调用自己
+    inOrderTraverse(T->lchild); //访问该结点的左子树
+    printf("%d ", T->data);    //调用操作结点数据的函数方法
+
+    inOrderTraverse(T->rchild); //访问该结点的右子树
+}
+// 后序遍历
+void postOrderTraverse(BiTree T)
+{
+    //终止条件
+    if (T == NULL)
+    {
+        return;
+    }
+    //调用自己
+    postOrderTraverse(T->lchild); //访问该结点的左子树
+    postOrderTraverse(T->rchild); //访问该结点的右子树
+    printf("%d ", T->data);        //调用操作结点数据的函数方法
+}
+
 int main()
 {
     BiTree Tree;         //新建跟节点
     CreateBiTree(&Tree); //创建二叉树，传地址，可以直接改变Tree的内容
+
     printf("先序遍历: \n");
     PreOrderTraverse(Tree);
+    printf("\n");
+
+    printf("中序遍历: \n");
+    inOrderTraverse(Tree);
+    printf("\n");
+
+    printf("后序遍历: \n");
+    postOrderTraverse(Tree);
+    printf("\n");
 }
