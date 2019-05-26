@@ -8,4 +8,5 @@ run:
     ./main
 clean:
     rm main
+	
 .PHONY:all compile run clean
