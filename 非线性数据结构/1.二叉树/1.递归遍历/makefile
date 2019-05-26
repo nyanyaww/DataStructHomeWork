@@ -3,10 +3,10 @@ CC = gcc
 all:compile run clean
     
 compile:
-    $(CC) main.c -o main
+	$(CC) main.c -o main
 run:
-    ./main
+	./main
 clean:
-    rm main
-	
+	rm main
+
 .PHONY:all compile run clean
