@@ -6,4 +6,4 @@ run:
 	./main
 clean:
 	rm main
-
+	
