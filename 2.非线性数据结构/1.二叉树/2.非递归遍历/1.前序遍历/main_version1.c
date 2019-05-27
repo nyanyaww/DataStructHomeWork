@@ -74,12 +74,38 @@ void PreOrderTraverse(BiTree Tree)
         while (p)
         {
             displayElem(p); //调用结点的操作函数
-            //如果该结点有右孩子，右孩子进栈
+
             if (p->rchild)
             {
+                // 2（1）如果有栈顶有右孩子，就入栈
                 push(a, p->rchild);
             }
-            p = p->lchild; //一直指向根结点最后一个左孩子
+            // 判断有没有左孩子
+            // 2（2）（b）如果没有左孩子的话就跳出这个while
+            p = p->lchild;
+            // 2（2）（a）有左孩子的话就调用display输出
+        }
+    }
+}
+
+//先序非递归
+void preOrderNonRec(BiTNode *T)
+{
+    BiTNode *p = T;
+    BiTNode *S[20];
+    int top = -1;
+    while (p || top != -1)
+    {
+        while (p)
+        {
+            printf("%d ", p->data);
+            S[++top] = p;
+            p = p->lchild;
+        }
+        if (top != -1)
+        {
+            p = S[top--];
+            p = p->rchild;
         }
     }
 }
