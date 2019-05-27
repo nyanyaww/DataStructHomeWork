@@ -35,9 +35,8 @@ void PreOrderTraverse(BiTree Tree)
                 push(a, p->rchild);
             }
             // 判断有没有左孩子
-            // 2（2）（b）如果没有左孩子的话就跳出这个
+            // 2（2）（b）如果没有左孩子的话就跳出这个while
             // 此时display会输出右孩子的值
-            while
             p = p->lchild;
             // 2（2）（a）有左孩子的话就调用display输出
         }
