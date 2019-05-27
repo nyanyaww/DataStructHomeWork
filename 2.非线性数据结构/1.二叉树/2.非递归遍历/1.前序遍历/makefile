@@ -9,9 +9,9 @@ compile:
 
 compile1:
 	$(CC) main_version1.c -o main_v1
-run1:
-	./main_v1
 
+run1:
+	main_v1.exe
 run:
 	./main
 clean:

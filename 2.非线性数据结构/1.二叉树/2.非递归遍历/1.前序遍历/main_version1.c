@@ -59,6 +59,8 @@ BiTNode *getTop(BiTNode **a)
 {
     return a[top];
 }
+
+
 //先序遍历非递归算法
 void PreOrderTraverse(BiTree Tree)
 {
@@ -83,6 +85,7 @@ void PreOrderTraverse(BiTree Tree)
 }
 int main()
 {
+    system("chcp 65001");
     BiTree Tree;
     CreateBiTree(&Tree);
     printf("先序遍历: \n");
