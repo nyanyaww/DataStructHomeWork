@@ -69,6 +69,7 @@ void postOrderNonRec(BiTNode *T)
     int top = -1;
     while (p || top != -1)
     {
+        // wtf
         if (p)
         {
             S[++top] = p;
