@@ -53,24 +53,15 @@ void displayNode(BiTree node)
     printf("%d ", node->data);
 }
 
-
-int main()
+void SeqTraverse(BiTree *tree)
 {
-    BiTree tree;
-    //初始化二叉树
-    CreateBiTree(&tree);
     BiTNode *p;
-    //采用顺序队列，初始化创建队列数组
     BiTree a[20];
-    //根结点入队
     EnQueue(a, tree);
-    //当队头和队尾相等时，表示队列为空
     while (front < rear)
     {
-        //队头结点出队
         p = DeQueue(a);
         displayNode(p);
-        //将队头结点的左右孩子依次入队
         if (p->lchild != NULL)
         {
             EnQueue(a, p->lchild);
@@ -80,5 +71,15 @@ int main()
             EnQueue(a, p->rchild);
         }
     }
+}
+
+int main()
+{
+    BiTree tree;
+    //初始化二叉树
+    CreateBiTree(&tree);
+    printf("层序遍历：\n");
+    SeqTraverse(tree);
+    printf("\n");
     return 0;
 }

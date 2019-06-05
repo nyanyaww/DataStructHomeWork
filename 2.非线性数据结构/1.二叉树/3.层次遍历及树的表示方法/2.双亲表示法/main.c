@@ -67,6 +67,11 @@ void findParent(Tree *t, char data)
     printf("这棵树没有节点%c\n", data);
 }
 
+// void findChild(Tree *t, char data)
+// {
+
+// }
+
 int main()
 {
     Tree *t = (Tree *)malloc(sizeof(Tree));
@@ -78,5 +83,4 @@ int main()
     findParent(t, 'D');
     findParent(t, 'E');
     findParent(t, 'F');
-    findParent(t, 'M');
 }

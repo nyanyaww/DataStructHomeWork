@@ -63,13 +63,13 @@ void displayNode(BiTree node)
 
 void SeqTraverse(BiTree *tree)
 {
-    int level = 0, len;
+    int height = 0, len;
     BiTNode *p;
     BiTree a[20];
     EnQueue(a, tree);
     while (front < rear)
     {
-        level++;
+        height++;
         len = rear - front;
         while (len--)
         {
@@ -87,7 +87,7 @@ void SeqTraverse(BiTree *tree)
             }
         }
     }
-    printf("高度：%d\n", level);
+    printf("高度：%d\n", height);
 }
 
 int main()
