@@ -1,54 +1,3 @@
-/*
-// #include <stdio.h>
-// #include <stdlib.h>
-
-// #define MAX_SIZE 100
-
-// typedef struct childNode
-// {
-//     int index; // 存储孩子节点的下标
-//     struct childNode *next;
-// } pchildNode;
-
-// typedef struct Child
-// {
-//     char data;
-//     pchildNode *head;
-// } Child;
-
-// typedef struct Tree
-// {
-//     Child nodes[MAX_SIZE];
-//     int numbers;
-// } Tree;
-
-// void createTree(Tree *t)
-// {
-//     t->numbers = 0;
-//     t->nodes[t->numbers].head = NULL;
-//     t->nodes[t->numbers].data = 'R';
-//     t->numbers++;
-
-//     pchildNode *newEle = (pchildNode *)malloc(sizeof(pchildNode));
-//     newEle->next = NULL;
-//     newEle->index = 1;
-
-//     t->nodes[0].head->next = newEle;
-//     t->nodes[t->numbers].head = NULL;
-//     t->nodes[t->numbers].data = 'A';
-//     t->numbers++;
-
-// }
-
-// int main()
-// {
-//     Tree *t = (Tree *)malloc(sizeof(Tree));
-//     createTree(t);
-//     printf("%c", &t->nodes[0].head->next);
-//     return 0;
-// }
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX_SIZE 20
@@ -138,5 +87,4 @@ int main()
     tree.r = 0;
     printf("找出节点 R 的所有孩子节点：");
     findKids(tree, 'R');
-    return 0;
 }
