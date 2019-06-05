@@ -17,6 +17,7 @@ typedef struct Tree
 
 void createTree(Tree *t)
 {
+    t->nodeNumbers = 0;
     t->allNode[t->nodeNumbers].data = 'R';
     t->allNode[t->nodeNumbers++].parentIndex = -1;
 
