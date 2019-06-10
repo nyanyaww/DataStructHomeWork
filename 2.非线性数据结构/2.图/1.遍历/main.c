@@ -143,8 +143,8 @@ int NextAdjacentVertax(Graph G, VerElemType v, VerElemType w)
     }
     return -1;
 }
-//			从v的第一邻接点开始深度优先遍历，
-//			然后从v的第二邻接开始深度优先遍历。直到没有邻接点
+//从v的第一邻接点开始深度优先遍历，
+//然后从v的第二邻接开始深度优先遍历。直到没有邻接点
 
 int visitedArray[MAX_VERTAX_SIZE];
 void visit(VerElemType c)
@@ -156,7 +156,7 @@ VerElemType GetVertaxValue(Graph G, int position)
     return G.VertaxMatrix[position];
 }
 int DFS(Graph G, VerElemType v)
-{ //Depth First Search
+{ 
     VerElemType w;
     visit(v);
     visitedArray[LocateVertax(G, v)] = 1;
