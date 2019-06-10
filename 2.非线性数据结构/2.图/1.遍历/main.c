@@ -109,7 +109,6 @@ int CreateUndigraph(Graph *G) //创建无向图
     printf("请输入有关联边的两点: ");
     for (k = 0; k < G->EageNum; k++)
     {
-
         scanf("%c %c%*c", &x, &y);
         i = LocateVertax(*G, x);
         j = LocateVertax(*G, y);
@@ -230,6 +229,7 @@ int main()
     {
         menu();
         scanf("%d", &input);
+        system("clear");
         switch (input)
         {
         case 1:
@@ -246,7 +246,7 @@ int main()
             printf("退出程序\n");
             break;
         default:
-            printf("输入错误,请重新输入>");
+            printf("输入错误,请重新输入>\n");
         }
 
     } while (input);
