@@ -26,7 +26,7 @@ gcc main.c -o main
 
 通过以上操作生成了这样的一张图
 
-![测试的图结构](./test_graph.png)
+![测试的图结构](./img/test_graph.png)
 
 ## 程序运行结果
 
