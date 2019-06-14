@@ -69,16 +69,7 @@ Graph *create_example_graph()
     return pG;
 }
 
-/*
- * Dijkstra最短路径。
- * 即，统计图(G)中"顶点vs"到其它各个顶点的最短路径。
- *
- * 参数说明：
- *        G -- 图
- *       vs -- 起始顶点(start vertex)。即计算"顶点vs"到其它顶点的最短路径。
- *     prev -- 前驱顶点数组。即，prev[i]的值是"顶点vs"到"顶点i"的最短路径所经历的全部顶点中，位于"顶点i"之前的那个顶点。
- *     dist -- 长度数组。即，dist[i]是"顶点vs"到"顶点i"的最短路径的长度。
- */
+
 void dijkstra(Graph G, int vs, int prev[], int dist[])
 {
     int i, j, k;

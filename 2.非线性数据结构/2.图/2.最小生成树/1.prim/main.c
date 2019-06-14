@@ -72,13 +72,6 @@ Graph *create_example_graph()
     return pG;
 }
 
-/*
- * prim最小生成树
- *
- * 参数说明：
- *       G -- 邻接矩阵图
- *   start -- 从图中的第start个元素开始，生成最小树
- */
 void prim(Graph G, int start)
 {
     int min, i, j, k, m, n, sum;
