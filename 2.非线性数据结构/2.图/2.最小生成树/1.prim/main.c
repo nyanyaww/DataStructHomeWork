@@ -1,114 +1,163 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
+#include <string.h>
 
-#define MAXEDGE 20
-#define MAXVEX 20
-#define INIFINTY 65535
+#define MAX 100            // 矩阵最大容量
+#define INF (~(0x1 << 31)) // 最大值(即0X7FFFFFFF)
+#define isLetter(a) ((((a) >= 'a') && ((a) <= 'z')) || (((a) >= 'A') && ((a) <= 'Z')))
+#define LENGTH(a) (sizeof(a) / sizeof(a[0]))
 
-typedef struct {
-    
-    int arc[MAXVEX][MAXVEX];
-    int numVertexes, numEdges;
-    
-}MGraph;
+// 邻接矩阵
+typedef struct _graph
+{
+    char vexs[MAX];       // 顶点集合
+    int vexnum;           // 顶点数
+    int edgnum;           // 边数
+    int matrix[MAX][MAX]; // 邻接矩阵
+} Graph, *PGraph;
 
-/**
- * 构建图
+/*
+ * 返回ch在matrix矩阵中的位置
  */
-void CreateMGraph(MGraph * G){
-    
+static int get_position(Graph g, char ch)
+{
+    int i;
+    for (i = 0; i < g.vexnum; i++)
+        if (g.vexs[i] == ch)
+            return i;
+    return -1;
+}
+/*
+ * 创建图(用已提供的矩阵)
+ */
+Graph *create_example_graph()
+{
+    char vexs[] = {'A', 'B', 'C', 'D', 'E'};
+    int matrix[][5] = {
+        /*A*/ /*B*/ /*C*/ /*D*/ /*E*/
+        /*A*/ {0, 1, 6, 5, 7},
+        /*B*/ {1, 0, 4, INF, 2},
+        /*C*/ {6, 4, 0, 3, 5},
+        /*D*/ {5, INF, 3, 0, 6},
+        /*E*/ {7, 2, 5, 6, 0},
+    };
+    int vlen = LENGTH(vexs);
     int i, j;
-    
-    G->numVertexes = 9;  // 9个顶点
-    G->numEdges = 15;  // 15条边
-    
-    for (i = 0; i < G->numVertexes; i++) {  // 初始化图
-        for (j = 0; j < G->numVertexes; j++) {
-            if (i == j)
-                G->arc[i][j] = 0;
-            else
-                G->arc[i][j] = G->arc[j][i] = INIFINTY;
-        }
-    }
-    
-    G->arc[0][1] = 10;
-    G->arc[0][5] = 11;
-    
-    G->arc[1][2] = 18;
-    G->arc[1][8] = 12;
-    G->arc[1][6] = 16;
-    
-    G->arc[2][3] = 22;
-    G->arc[2][8] = 8;
-    
-    G->arc[3][4] = 20;
-    G->arc[3][7] = 16;
-    G->arc[3][6] = 24;
-    G->arc[3][8] = 21;
-    
-    G->arc[4][5] = 26;
-    G->arc[4][7] = 7;
-    
-    G->arc[5][6] = 17;
-    
-    G->arc[6][7] = 19;
-    
-    // 利用邻接矩阵的对称性
-    for (i = 0; i < G->numVertexes; i++)
-        for (j = 0; j < G->numVertexes; j++)
-            G->arc[j][i] = G->arc[i][j];
+    Graph *pG;
+
+    // 输入"顶点数"和"边数"
+    if ((pG = (Graph *)malloc(sizeof(Graph))) == NULL)
+        return NULL;
+    memset(pG, 0, sizeof(Graph));
+
+    // 初始化"顶点数"
+    pG->vexnum = vlen;
+    // 初始化"顶点"
+    for (i = 0; i < pG->vexnum; i++)
+        pG->vexs[i] = vexs[i];
+
+    // 初始化"边"
+    for (i = 0; i < pG->vexnum; i++)
+        for (j = 0; j < pG->vexnum; j++)
+            pG->matrix[i][j] = matrix[i][j];
+
+    // 统计边的数目
+    for (i = 0; i < pG->vexnum; i++)
+        for (j = 0; j < pG->vexnum; j++)
+            if (i != j && pG->matrix[i][j] != INF)
+                pG->edgnum++;
+    pG->edgnum /= 2;
+
+    return pG;
 }
 
-
-/**
- * Prime算法生成最小生成树
+/*
+ * prim最小生成树
+ *
+ * 参数说明：
+ *       G -- 邻接矩阵图
+ *   start -- 从图中的第start个元素开始，生成最小树
  */
-void MiniSpanTree_Prim(MGraph G){
-    
-    int min,i,j,k;
-    
-    int adjvex[MAXVEX]; // 保存相关顶点的下标
-    int lowcost[MAXVEX]; // 保存相关顶点间边的权值
-    
-    lowcost[0] = 0;  // 初始化第一个权值为0，即v0加入生成树
-    adjvex[0] = 0; // 初始化第一个顶点下标为0
-    
-    for (i = 1; i < G.numVertexes; i++) {  // 循环除下标为0外的全部顶点
-        lowcost[i] = G.arc[0][i];  // 将v0顶点与之右边的权值存入数组
-        adjvex[i] = 0; // 初始化都为v0的下标
-    }
-    
-    for (i = 1; i < G.numVertexes; i++) {
-        
-        min = INIFINTY; //初始化最小权值
-        j = 1;
+void prim(Graph G, int start)
+{
+    int min, i, j, k, m, n, sum;
+    int index = 0;    // prim最小树的索引，即prims数组的索引
+    char prims[MAX];  // prim最小树的结果数组
+    int weights[MAX]; // 顶点间边的权值
+
+    // prim最小生成树中第一个数是"图中第start个顶点"，因为是从start开始的。
+    prims[index++] = G.vexs[start];
+
+    // 初始化"顶点的权值数组"，
+    // 将每个顶点的权值初始化为"第start个顶点"到"该顶点"的权值。
+    for (i = 0; i < G.vexnum; i++)
+        weights[i] = G.matrix[start][i];
+    // 将第start个顶点的权值初始化为0。
+    // 可以理解为"第start个顶点到它自身的距离为0"。
+    weights[start] = 0;
+
+    for (i = 0; i < G.vexnum; i++)
+    {
+        // 由于从start开始的，因此不需要再对第start个顶点进行处理。
+        if (start == i)
+            continue;
+
+        j = 0;
         k = 0;
-        
-        while (j < G.numVertexes) { // 循环全部顶点
-            if (lowcost[j] != 0 && lowcost[j] < min) {
-                min = lowcost[j];  // 让当前权值变为最小值
-                k = j;  // 将当前最小值的下标存入k
+        min = INF;
+        // 在未被加入到最小生成树的顶点中，找出权值最小的顶点。
+        while (j < G.vexnum)
+        {
+            // 若weights[j]=0，意味着"第j个节点已经被排序过"(或者说已经加入了最小生成树中)。
+            if (weights[j] != 0 && weights[j] < min)
+            {
+                min = weights[j];
+                k = j;
             }
             j++;
         }
-        
-        printf("(%d, %d)\n", adjvex[k], k);  // 打印当前顶点中权值最小的边
-        lowcost[k] = 0;             // 将当前顶点的权值设置为0，表示此顶点已经完成任务
-        
-        for (j = 1; j < G.numVertexes; j++) {  // 循环所有顶点
-            if (lowcost[j]!= 0 && G.arc[k][j] < lowcost[j]) {  // 如果下标为k顶点各边权值小于当前这些顶点未被加入生成树权值
-                lowcost[j] = G.arc[k][j]; // 将较小的权值存入lowcost相应的位置
-                adjvex[j] = k;   // 将下标为k的顶点存入adjvex
-            }
+
+        // 经过上面的处理后，在未被加入到最小生成树的顶点中，权值最小的顶点是第k个顶点。
+        // 将第k个顶点加入到最小生成树的结果数组中
+        prims[index++] = G.vexs[k];
+        // 将"第k个顶点的权值"标记为0，意味着第k个顶点已经排序过了(或者说已经加入了最小树结果中)。
+        weights[k] = 0;
+        // 当第k个顶点被加入到最小生成树的结果数组中之后，更新其它顶点的权值。
+        for (j = 0; j < G.vexnum; j++)
+        {
+            // 当第j个节点没有被处理，并且需要更新时才被更新。
+            if (weights[j] != 0 && G.matrix[k][j] < weights[j])
+                weights[j] = G.matrix[k][j];
         }
     }
+
+    // 计算最小生成树的权值
+    sum = 0;
+    for (i = 1; i < index; i++)
+    {
+        min = INF;
+        // 获取prims[i]在G中的位置
+        n = get_position(G, prims[i]);
+        // 在vexs[0...i]中，找出到j的权值最小的顶点。
+        for (j = 0; j < i; j++)
+        {
+            m = get_position(G, prims[j]);
+            if (G.matrix[m][n] < min)
+                min = G.matrix[m][n];
+        }
+        sum += min;
+    }
+    // 打印最小生成树
+    printf("PRIM(%c) = %d: ", G.vexs[start], sum);
+    for (i = 0; i < index; i++)
+        printf("%c ", prims[i]);
+    printf("\n");
 }
 
-int main(int argc, const char * argv[]) {
-    
-    MGraph G;
-    CreateMGraph(&G);
-    MiniSpanTree_Prim(G);
-    
-    return 0;
+void main()
+{
+    Graph *pG;
+    pG = create_example_graph();
+    prim(*pG, 0); // prim算法生成最小生成树
 }
